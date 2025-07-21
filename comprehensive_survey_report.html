@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RightPlace Survey Report - July 2025</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .nav-tab {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            font-weight: 500;
+        }
+        
+        .nav-tab:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
+        .nav-tab.active {
+            background: white;
+            color: #667eea;
+            border-color: white;
+        }
+        
+        .page {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .chart-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+        
+        .insights-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .insight-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .insight-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .quote-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .quote {
+            font-style: italic;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            border-left: 4px solid white;
+        }
+        
+        .quote-author {
+            font-weight: bold;
+            text-align: right;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .content-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .content-section h3 {
+            color: #333;
+            margin: 20px 0 10px 0;
+        }
+        
+        .content-section p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        
+        .content-section ul, .content-section ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        .content-section li {
+            margin-bottom: 8px;
+        }
+        
+        .csv-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+        
+        .csv-table th, .csv-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .csv-table th {
+            background-color: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .csv-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .csv-table tr:hover {
+            background-color: #e9ecef;
+        }
+        
+        .csv-container {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>RightPlace Survey Report</h1>
+            <p>July 2025 - Comprehensive Analysis</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showPage('overview')">📊 Overview</div>
+            <div class="nav-tab" onclick="showPage('detailed-analysis')">📈 Detailed Analysis</div>
+            <div class="nav-tab" onclick="showPage('user-voices')">💬 User Voices</div>
+            <div class="nav-tab" onclick="showPage('survey-data')">📋 Survey Data</div>
+        </div>
+
+        <!-- Overview Page -->
+        <div id="overview" class="page active">
+            <h2 class="chart-title">Executive Summary</h2>
+            
+            <!-- Key Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">22</div>
+                    <div class="stat-label">Total Respondents</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Power Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Trial Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4.7/5</div>
+                    <div class="stat-label">Power User Satisfaction</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">6.8/10</div>
+                    <div class="stat-label">Trial User Recommendation</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">40%</div>
+                    <div class="stat-label">Blocked by Performance Issues</div>
+                </div>
+            </div>
+
+            <!-- Usage Frequency Comparison -->
+            <div class="chart-section">
+                <h2 class="chart-title">Usage Frequency Comparison</h2>
+                <div class="chart-container">
+                    <canvas id="usageChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Satisfaction Ratings -->
+            <div class="chart-section">
+                <h2 class="chart-title">Satisfaction Ratings Distribution</h2>
+                <div class="chart-container">
+                    <canvas id="satisfactionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top Barriers for Trial Users -->
+            <div class="chart-section">
+                <h2 class="chart-title">Top Barriers for Trial Users</h2>
+                <div class="chart-container">
+                    <canvas id="barriersChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Most Valued Features -->
+            <div class="comparison-grid">
+                <div class="chart-section">
+                    <h2 class="chart-title">Power Users - Most Used Features</h2>
+                    <div class="chart-container">
+                        <canvas id="powerFeaturesChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-section">
+                    <h2 class="chart-title">Trial Users - Most Desired Features</h2>
+                    <div class="chart-container">
+                        <canvas id="trialFeaturesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Insights -->
+            <div class="insights-section">
+                <h2 class="chart-title">Key Insights</h2>
+                
+                <div class="insight-card">
+                    <div class="insight-title">🎯 Power Users Love RightPlace</div>
+                    <p>100% use it daily, 86% give 5-star ratings. They describe it as "game-changing" and "indispensable" for managing multiple WordPress sites.</p>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-title">⚠️ Performance Issues Block Trial Users</div>
+                    <p>40% of trial users cite "performance problems/bugs" as their main barrier. This is the #1 blocker preventing adoption.</p>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-title">🤖 AI Features in High Demand</div>
+                    <p>20% of trial users specifically mention AI features as their most desired functionality. They know it's "coming" and are waiting for it.</p>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-title">🔧 Integration Needs</div>
+                    <p>Users want better integration with existing tools like MainWP, security plugins (Fortress Security), and SSH/SFTP terminals.</p>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-title">📚 Onboarding Gaps</div>
+                    <p>Many trial users struggle with setup and understanding how to use the app effectively. Better documentation and tutorials are needed.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Analysis Page -->
+        <div id="detailed-analysis" class="page">
+            <div class="content-section">
+                <h2>RightPlace Survey Analysis - July 2025</h2>
+                
+                <h3>Executive Summary</h3>
+                <p>This analysis compares two user segments:</p>
+                <ul>
+                    <li><strong>Power Users</strong> (7 respondents): Daily users who rely heavily on RightPlace</li>
+                    <li><strong>Trial Users</strong> (15 respondents): Users who purchased but use it infrequently or stopped</li>
+                </ul>
+
+                <h3>Key Findings</h3>
+                
+                <h4>🎯 Power Users - What's Working</h4>
+                <p><strong>Usage Patterns:</strong></p>
+                <ul>
+                    <li>100% use RightPlace daily (multiple times per day for most)</li>
+                    <li>All are agency owners, developers, or consultants managing multiple sites</li>
+                    <li>Primary use cases: Post/page editing, plugin management, media organization, site performance</li>
+                </ul>
+
+                <p><strong>Most Valued Features:</strong></p>
+                <ol>
+                    <li><strong>Built-in browser</strong> - Centralized access to all sites</li>
+                    <li><strong>Post/Page editor</strong> - Streamlined content management</li>
+                    <li><strong>Bricks Asset management</strong> - Builder-specific functionality</li>
+                    <li><strong>Plugin/theme management/Blueprint</strong> - Site configuration tools</li>
+                </ol>
+
+                <p><strong>Satisfaction Level:</strong></p>
+                <ul>
+                    <li>Average rating: 4.7/5 stars</li>
+                    <li>86% give 5-star ratings</li>
+                    <li>Users describe it as "game-changing" and "indispensable"</li>
+                </ul>
+
+                <h4>⚠️ Trial Users - Barriers to Adoption</h4>
+                <p><strong>Usage Patterns:</strong></p>
+                <ul>
+                    <li>73% opened the app "a few times" or "once"</li>
+                    <li>27% never opened it after purchase</li>
+                    <li>Main reason for purchase: "WordPress management" (67%)</li>
+                </ul>
+
+                <p><strong>Top Barriers:</strong></p>
+                <ol>
+                    <li><strong>Performance problems/bugs</strong> (40%)</li>
+                    <li><strong>Missing critical features</strong> (33%)</li>
+                    <li><strong>Installation/setup issues</strong> (13%)</li>
+                    <li><strong>Didn't understand how to use it</strong> (13%)</li>
+                </ol>
+
+                <h3>Critical Insights</h3>
+                
+                <h4>🔥 What Power Users Love</h4>
+                <ul>
+                    <li><strong>Centralization</strong>: Having all sites and tools in one place</li>
+                    <li><strong>Efficiency</strong>: Quick access to common tasks without tab switching</li>
+                    <li><strong>Integration</strong>: Seamless workflow between different WordPress tasks</li>
+                    <li><strong>Asset Management</strong>: Builder-specific features for Bricks users</li>
+                </ul>
+
+                <h4>🚧 What's Blocking Trial Users</h4>
+                <ul>
+                    <li><strong>Stability Issues</strong>: Performance problems and bugs</li>
+                    <li><strong>Feature Gaps</strong>: Missing critical functionality they expected</li>
+                    <li><strong>Onboarding</strong>: Lack of clear guidance on how to use the app</li>
+                    <li><strong>Integration Needs</strong>: Want better connections with existing tools (MainWP, security plugins)</li>
+                </ul>
+
+                <h3>Recommendations</h3>
+                
+                <h4>Short-term (1-2 months)</h4>
+                <ol>
+                    <li><strong>Fix performance issues</strong> - This is blocking 40% of trial users</li>
+                    <li><strong>Improve onboarding</strong> - Add tutorials and better documentation</li>
+                    <li><strong>Enhance auto-login</strong> - Work with security plugins like Fortress Security</li>
+                </ol>
+
+                <h4>Medium-term (3-6 months)</h4>
+                <ol>
+                    <li><strong>Launch AI features</strong> - High demand from both segments</li>
+                    <li><strong>Add multi-window support</strong> - Frequently requested feature</li>
+                    <li><strong>Develop SSH/SFTP terminal</strong> - Would replace external tools</li>
+                    <li><strong>Create MainWP integration</strong> - Bridge to existing workflows</li>
+                </ol>
+
+                <h4>Long-term (6+ months)</h4>
+                <ol>
+                    <li><strong>Database migration tools</strong> - Would be a major differentiator</li>
+                    <li><strong>Advanced blueprint features</strong> - Build on existing asset management</li>
+                    <li><strong>Mobile/tablet support</strong> - Some users mentioned iPad usage</li>
+                </ol>
+            </div>
+        </div>
+
+
+
+        <!-- User Voices Page -->
+        <div id="user-voices" class="page">
+            <!-- Positive User Voices -->
+            <div class="quote-section" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                <h2 class="chart-title">🌟 Positive User Voices</h2>
+                
+                <div class="quote">
+                    "RightPlace is the tool you didn't know you needed until you have it. They update the app constantly and support has been great."
+                    <div class="quote-author">- Thomas @ qFido | Founder</div>
+                </div>
+                
+                <div class="quote">
+                    "I can't imagine going back to a browser-only workflow. It allows me to move between projects smoothly, stay focused, work efficiently."
+                    <div class="quote-author">- Marc @ Vision Rocket, Agency Owner</div>
+                </div>
+                
+                <div class="quote">
+                    "This has been the most game changing app I could find to increase productivity. Developing a site in RightPlace has never been so easy, thanks to all the functions available! A no-brainer when being a freelancer! 5 well deserved stars!"
+                    <div class="quote-author">- Jimmy @ The Webonaut, developer</div>
+                </div>
+            </div>
+
+            <!-- Blueprint & Media Management Feedback -->
+            <div class="quote-section" style="background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);">
+                <h2 class="chart-title">🔧 Blueprint & Media Management Feedback</h2>
+                
+                <div class="quote">
+                    "In the blueprint section when I click a plugin, I'm a little unsure as to whether clicking the Upload button is the same as installing the plugin. Also, it would be helpful if the Upload button read Rollback on versions older than what's currently installed on the site."
+                    <div class="quote-author">- Marc @ Vision Rocket, Agency Owner</div>
+                </div>
+                
+                <div class="quote">
+                    "It would be helpful if the blueprint notified me of new releases. Collections or Repositories or Stacks or Bundles would be clearer than Blueprints. When I think of Blueprints, I think of a complete WordPress install, with WP and plugins configured in a specific way."
+                    <div class="quote-author">- Marc @ Vision Rocket, Agency Owner</div>
+                </div>
+                
+                <div class="quote">
+                    "Media management. Getting images from a source, saving it locally, then editing it for upload, then converting it, then upload, then sort it again on the WP install. Wouldn't it be nice if the image were uploaded to an element and WP converted to WebP and automatically put it in a folder in Happy Files for the page. Possibly allow for tagging for future search like 'logo.'"
+                    <div class="quote-author">- Thomas @ qFido | Founder</div>
+                </div>
+                
+                <div class="quote">
+                    "The Builder Asset Manager (previous version) is a game-changer, allowing you to switch between pages swiftly and efficiently. I particularly enjoy the post editor, which makes it easy and quick to make changes, add featured images, and more."
+                    <div class="quote-author">- Filippo @ High Production Studio</div>
+                </div>
+                
+                <div class="quote">
+                    "Blueprints and local development. Terminal to run WP CLI on sites open. Plugin blueprints."
+                    <div class="quote-author">- Anonymous Trial User</div>
+                </div>
+            </div>
+
+            <!-- Negative Feedback & Struggles -->
+            <div class="quote-section" style="background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);">
+                <h2 class="chart-title">⚠️ User Struggles & Feedback</h2>
+                
+                <div class="quote">
+                    "The idea is there, but the product is not. Keep going. I still believe it, but now it's still too beta for my workflow."
+                    <div class="quote-author">- Anonymous Trial User</div>
+                </div>
+                
+                <div class="quote">
+                    "When the window is maximized the content inside the window is cut out on the right and on the bottom. The shortcuts are not working properly."
+                    <div class="quote-author">- Aarón @ Ubuntu Productions, CEO</div>
+                </div>
+                
+                <div class="quote">
+                    "UI can be improved a lot. Waiting for the app to become more stable and remember which tab i left the app at."
+                    <div class="quote-author">- Gurjyot @ Singh Media Group and Founder/Owner</div>
+                </div>
+                
+                <div class="quote">
+                    "The master password slows me down. The load master password button does not stay on. I think I must not understand its purpose."
+                    <div class="quote-author">- Marc @ Vision Rocket, Agency Owner</div>
+                </div>
+                
+                <div class="quote">
+                    "Because I use the Fortress Security plugin and/or a custom login page & form on most client sites, RP's quick login hasn't worked for me. MainWP's approach does, but RP's doesn't."
+                    <div class="quote-author">- jeffdyoung@gmail.com</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Survey Data Page -->
+        <div id="survey-data" class="page">
+            <div class="content-section">
+                <h2>📋 Survey Data</h2>
+                
+                <h3>Power Users Survey Results</h3>
+                <div class="csv-container">
+                    <table class="csv-table" id="powerUsersTable">
+                        <!-- Power users data will be loaded here -->
+                    </table>
+                </div>
+                
+                <h3>Trial Users Survey Results</h3>
+                <div class="csv-container">
+                    <table class="csv-table" id="trialUsersTable">
+                        <!-- Trial users data will be loaded here -->
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update navigation tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Wait for DOM to load
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Usage Frequency Chart
+            const usageCtx = document.getElementById('usageChart');
+            if (usageCtx) {
+                new Chart(usageCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Daily (Multiple Times)', 'Daily (Once)', 'A Few Times', 'Once', 'Never Opened'],
+                        datasets: [{
+                            label: 'Power Users',
+                            data: [5, 2, 0, 0, 0],
+                            backgroundColor: '#667eea',
+                            borderColor: '#5a6fd8',
+                            borderWidth: 2
+                        }, {
+                            label: 'Trial Users',
+                            data: [0, 0, 9, 2, 4],
+                            backgroundColor: '#764ba2',
+                            borderColor: '#6a4190',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Satisfaction Ratings Chart
+            const satisfactionCtx = document.getElementById('satisfactionChart');
+            if (satisfactionCtx) {
+                new Chart(satisfactionCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['5 Stars (Power)', '4 Stars (Power)', '2 Stars (Power)', '10/10 (Trial)', '8-9/10 (Trial)', '5-7/10 (Trial)', '1-4/10 (Trial)'],
+                        datasets: [{
+                            data: [6, 1, 1, 3, 5, 4, 3],
+                            backgroundColor: [
+                                '#28a745', '#20c997', '#ffc107', '#28a745', '#17a2b8', '#ffc107', '#dc3545'
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Barriers Chart
+            const barriersCtx = document.getElementById('barriersChart');
+            if (barriersCtx) {
+                new Chart(barriersCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Performance Problems/Bugs', 'Missing Critical Features', 'Installation/Setup Issues', 'Didn\'t Understand How to Use', 'Other'],
+                        datasets: [{
+                            label: 'Number of Users',
+                            data: [6, 5, 2, 2, 3],
+                            backgroundColor: '#dc3545',
+                            borderColor: '#c82333',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Power Users Features Chart
+            const powerFeaturesCtx = document.getElementById('powerFeaturesChart');
+            if (powerFeaturesCtx) {
+                new Chart(powerFeaturesCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Built-in Browser', 'Post/Page Editor', 'Bricks Asset Mgmt', 'Plugin/Theme Mgmt', 'Media Library Mgmt'],
+                        datasets: [{
+                            label: 'Users',
+                            data: [5, 4, 4, 3, 2],
+                            backgroundColor: '#667eea',
+                            borderColor: '#5a6fd8',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Trial Users Features Chart
+            const trialFeaturesCtx = document.getElementById('trialFeaturesChart');
+            if (trialFeaturesCtx) {
+                new Chart(trialFeaturesCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['AI Features', 'Better Auto-login', 'Multi-window', 'SSH/SFTP Terminal', 'Database Migration', 'MainWP Integration'],
+                        datasets: [{
+                            label: 'Mentions',
+                            data: [3, 2, 2, 2, 2, 2],
+                            backgroundColor: '#764ba2',
+                            borderColor: '#6a4190',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Load CSV data for survey results
+            loadCSVData();
+        });
+
+        // Function to load CSV data
+        function loadCSVData() {
+            // Power Users CSV data
+            const powerUsersData = [
+                ["Role", "WordPress Tasks", "Workflow", "Usage", "Features", "Typical Task", "Satisfaction", "Frustrations", "Leave App", "Task", "Improvement", "Rename Feature", "Interview", "Email", "Name", "Review", "Picture", "Terms", "ID", "Date", "Status"],
+                ["Agency owner / Consultant, Developer / Site-builder, Designer", "Writing or editing posts/pages, Building Pages using page builder, Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations, Manage users and customers", "I work locally using Local or on a staging site then update the public site using WPVivid. I occasionally use MainWp to manage a bunch of sites.", "Daily (multiple times)", "Bricks Asset management, Plugin/theme management/Blueprint, Built-in browser", "I do everything I can in RightPlace. I like having easy access to all my sites, assets, and blueprints in the same place where I can build the sites. I leave RightPlace open all day most of the time.", "⭐⭐⭐⭐⭐", "The master password slows me down. The load master password button does not stay on. I think I must not understand its purpose.", "yes", "Logging in to a password protected domain.", "Syncing with another machine. If I could grab my laptop and work with the same RightPlace setup that would be great.", "Collections or Repositories or Stacks or Bundles would be clearer than Blueprints.", "yes", "marc@visionrocket.com", "Marc @ Vision Rocket, Agency Owner", "In RightPlace so much of what I need is a click away. They are literally in the right place.", "Accepted", "29", "2025-07-19 16:23:44", "unread"],
+                ["Developer / Site-builder, Designer, Agency owner / Consultant", "Building Pages using page builder, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations, Manage WooCommerce/SureCart products", "Mostly use ARC to handle different websites with Turbo Admin to help navigate the websites faster.", "Daily (multiple times)", "Built-in browser", "Right now I am not using RightPlace's specific feature but only using it as a normal browser for editing and designing websites. Waiting for it to becomes more stable and introduce new features.", "⭐⭐", "UI can be improved a lot. Waiting for the app to become more stable and remember which tab i left the app at.", "no", "", "Something like CommandUI or turbo admin. That will make the workflow much much faster.", "", "yes", "thegurjyot@gmail.com", "Gurjyot @ Singh Media Group and Founder/Owner", "Right now RightPlace is the one app on which I am most dependent on for developing WordPress websites.", "Accepted", "26", "2025-07-18 15:31:23", "unread"],
+                ["Developer / Site-builder, Designer, Agency owner / Consultant", "Writing or editing posts/pages, Building Pages using page builder, Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations, Manage WooCommerce/SureCart products, Manage users and customers, Other", "The usual mess involves jumping back and forth between the dashboard to add media, edit posts, pages, and templates. I also have to jump between ten or more websites that I need to edit and manage simultaneously every day.", "Daily (once)", "Post/Page editor, Media library management, Bricks Asset management", "It's incredible to have everything in one (right) place. The Builder Asset Manager (previous version) is a game-changer, allowing you to switch between pages swiftly and efficiently.", "⭐⭐⭐⭐⭐", "Nothing serious", "no", "", "It's already indispensable for me, and it is a pre-beta!", "none", "yes", "filippo@highproductionstudio.co.uk", "Filippo", "RightPlace is an incredible piece of software that makes building and managing WordPress websites a dream.", "Accepted", "25", "2025-07-18 14:50:53", "unread"],
+                ["Developer / Site-builder", "Writing or editing posts/pages, Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations, Other", "Check if all sites are online. For this purpose, I use https://mysites.guru which has this function. I hope you'll be able to add it to RightPlace.", "Daily (once)", "Post/Page editor, Media library management, Bricks Asset management, Plugin/theme management/Blueprint, Built-in browser", "", "⭐⭐⭐⭐⭐", "I'm responding to the questionnaire, but I'm waiting for the Beta version before installing it.", "", "", "", "", "no", "", "Laurent GARIN", "", "Accepted", "24", "2025-07-18 12:27:45", "unread"],
+                ["Developer / Site-builder", "Writing or editing posts/pages, Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations", "Simply using Bricks in Safari", "Daily (multiple times)", "Post/Page editor, Plugin/theme management/Blueprint, Built-in browser", "Post management. Love how I can just create, edit, delete and manage posts directly from RightPlace", "⭐⭐⭐⭐⭐", "", "yes", "Adding custom taxonomy to CPT directly from RightPlace.", "Good question... it alreais indispensable!", "", "yes", "Info@mygraphic.design", "Jimmy @ The Webonaut, developer", "This has been the most game changing app I could find to increase productivity.", "Accepted", "23", "2025-07-18 09:43:05", "unread"],
+                ["Developer / Site-builder, Agency owner / Consultant", "Writing or editing posts/pages, Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations", "We take care of the full cycle of designing, developing, hosting, maintaining and optimizing websites for our clients.", "Daily (multiple times)", "Built-in browser", "Right place has allowed me to have all my websites centralized in one dashboard, this allows me to be more proactive doing small changes or tweaks as needed.", "⭐⭐⭐⭐", "That when the window is maximized the content inside the window is cut out on the right and on the bottom. That the shortcuts are not working properly.", "yes", "I use UiPress between other things to show graphics about Google Analytics on my sites.", "", "", "yes", "info@ubuntuproductions.fi", "Aarón @ Ubuntu Productions, CEO", "Right place has allowed me to have all my websites centralized in one dashboard.", "Accepted", "19", "2025-07-18 06:59:49", "unread"],
+                ["Agency owner / Consultant", "Writing or editing posts/pages, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations", "I use local Laravel valet which is pushed to a staging site on ServerAvatar where I test the site and sync it to live.", "Daily (once)", "Post/Page editor, Bricks Asset management, Plugin/theme management/Blueprint, Built-in browser, Other", "RightPlace has been best for getting small tasks and tweaks done very quickly as not to interrupt the main task at hand.", "⭐⭐⭐⭐⭐", "Media management. Getting images from a source, saving it locally, then editing it for upload, then converting it, then upload, then sort it again on the WP install.", "yes", "Get plugins and media. Use responsively to check if the site is responsive. DNS. Brixies. Get content. All kinds of stuff.", "Make post management fully featured and intuitive. Make it incredibly easy to edit ACF/Meta Box fields.", "The \"Build\" area. It has file management, plugin creation, snippet management.", "yes", "thethomasjfellows@gmail.com", "Thomas @ qFido | Founder", "RightPlace is the tool you didn't know you needed until you have it.", "Accepted", "14", "2025-07-18 01:57:29", "unread"]
+            ];
+
+            // Trial Users CSV data
+            const trialUsersData = [
+                ["Role", "WordPress Tasks", "Before Buying", "Main Reason", "Other", "Opened App", "Barriers", "Other", "Missing Feature", "Task", "Encouragement", "Other", "Feature", "Recommendation", "Feedback", "Interview", "Email", "ID", "Date", "Status"],
+                ["Developer / Site-builder, Agency owner / Consultant", "Writing or editing posts/pages, Building Pages using page builder, Theme customization or CSS tweaks, Media uploads & organization", "I had to use a tool like MainWP to manage all my client sites and had custom scripts configured with my Cloudways to spin up blueprints for staging and new client sites.", "WordPress management", "", "Yes (a few times)", "Performance problems / bugs", "", "Plugin repository management for keys and updates and the AI feature which I know is coming.", "New features, Live demo or webinar, Improved documentation", "", "Definitely the AI feature.", "10", "Not at the moment", "yes", "garsonkol@gmail.com", "31", "2025-07-19 19:38:21", "unread"],
+                ["Developer / Site-builder", "Writing or editing posts/pages, Building Pages using page builder, Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations, Manage WooCommerce/SureCart products, Manage users and customers", "Just logging in to each site and work", "Curiosity / early adopter", "", "Yes (a few times)", "", "", "", "Effiency", "Improved documentation", "", "Fie mansgrr", "10", "", "yes", "orionas.elite@gmail.com", "30", "2025-07-19 18:26:31", "unread"],
+                ["Agency owner / Consultant, Developer / Site-builder", "Building Pages using page builder, Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO", "Clone my blueprint site, configure select plugins for the client, (potentially) migrate content from an existing WP install, build reusable templates for client use (GutenBricks, [new] Etch), manage plugin updates via MainWP", "WordPress management", "", "Yes (a few times)", "Missing a critical feature, Other", "Because I use the Fortress Security plugin and/or a custom login page & form on most client sites, RP's quick login hasn't worked for me. MainWP's approach does, but RP's doesn't.", "I want RP to replace my use of Termius as my SSH and SFTP terminal (with saved command snippets) AND have a slightly cleaner way of managing my logins.", "Simplified setup wizard, New features", "", "Better auto-login that works with Fortress Security and custom login pages.", "8", "The recently opened site icons (on the left bar) need some customizable settings.", "yes", "jeffdyoung@gmail.com", "28", "2025-07-18 15:52:58", "unread"],
+                ["Developer / Site-builder", "Writing or editing posts/pages, Building Pages using page builder, Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations, Manage WooCommerce/SureCart products, Manage users and customers", "", "Curiosity / early adopter", "", "Yes (a few times)", "", "", "", "", "", "", "", "8", "", "", "27", "2025-07-18 15:42:33", "unread"],
+                ["Developer / Site-builder", "Theme customization or CSS tweaks, Plugin installation or configuration, Site performance & SEO, Backups & migrations, Other", "I manage a lot of WP sites and I thought RightPlace would make it easy for me by enabling me to do it all from one place.", "WordPress management", "", "Yes (a few times)", "Missing a critical feature, Performance problems / bugs", "", "", "Better onboarding/tutorial, Other", "A more finished product", "", "1", "The idea is there, but the product is not.", "no", "", "22", "2025-07-18 08:27:23", "unread"],
+                ["Developer / Site-builder, Agency owner / Consultant, Designer", "Plugin installation or configuration, Site performance & SEO, Backups & migrations", "I use then and now MainWP", "WordPress management", "", "Yes (a few times)", "Installation/setup issues, Didn't understand how to use it, Missing a critical feature, Performance problems / bugs", "", "Better WordPress Management for multiple sites. I now have one site on it, and even its maintenance doesn't work fluently.", "Live demo or webinar, Better onboarding/tutorial", "", "Maintenance", "7", "Keep going. I still believe it, but now it's still too beta for my workflow", "no", "", "21", "2025-07-18 08:21:34", "unread"],
+                ["", "Writing or editing posts/pages, Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations, Other", "", "WordPress management", "", "No", "Other", "Busy on site builds", "", "Master control of everything", "Other", "", "", "", "no", "", "20", "2025-07-18 07:26:15", "unread"],
+                ["Developer / Site-builder, Agency owner / Consultant", "Writing or editing posts/pages, Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations", "", "WordPress management", "", "Yes (a few times)", "Performance problems / bugs", "", "Blueprints and local development Terminal to run WP CLi on sites open. Plugin blueprints.", "New features", "", "Bitwarden intergration CLI Plugin blueprints", "8", "", "no", "", "18", "2025-07-18 06:59:24", "unread"],
+                ["Developer / Site-builder, Agency owner / Consultant", "Writing or editing posts/pages, Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations, Other", "", "WordPress management", "", "Yes (Once)", "Missing a critical feature, Performance problems / bugs", "", "Integration to MainWP to import sites and MainWP dedicated button to open. Shortcut to other sites that not are active development sites like google console ecc. archive for not longer active developed sites", "New features", "", "Multiwindow is one of the biggest feature that I need", "Too early", "", "yes", "Sascha@visiodot.com", "17", "2025-07-18 06:05:02", "unread"],
+                ["Developer / Site-builder, Designer, Agency owner / Consultant", "Writing or editing posts/pages, Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations", "Concept Workshop Figma wireframe WordPress setup on local WordPress Migration on Live with WP Vivid Ongoing Content and Site Optimisations", "WordPress management", "", "No", "Other", "Not enough Time. The product seems to be in an early Stage where Breaking change seem to be highly possible.", "", "Easier Management of Pages , Post, Customer Posts, Media…", "Better onboarding/tutorial", "", "Easier Management of Pages , Post, Customer Posts, Media…", "7 at the Moment (10 of its stable)", "One of my bog concern in the ecosystem of WordPress has become the to select the right toolset.", "no", "", "16", "2025-07-18 05:29:43", "unread"],
+                ["Developer / Site-builder, Designer", "Theme customization or CSS tweaks, Plugin installation or configuration, Site performance & SEO", "", "WordPress management", "", "Yes (a few times)", "", "", "", "", "Free trial of advanced features", "", "", "6", "", "yes", "rk@moonly.dk", "15", "2025-07-18 05:02:00", "unread"],
+                ["Designer", "Writing or editing posts/pages, Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations", "Multiple Wordpress websites/logins", "WordPress management", "", "Yes (a few times)", "", "", "", "I use my iPad a lot, cant do nothing about that", "Live demo or webinar", "", "I like the direction your going in", "7", "So far so good", "no", "", "13", "2025-07-18 01:52:58", "unread"],
+                ["Developer / Site-builder", "Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations", "Chaos… using lots of plugins to do my basic work.", "WordPress management", "", "Yes (a few times)", "Performance problems / bugs", "", "Post management (All posts, including CPTs) Plugin repo and easy deployment Back ups Migration from site to site (Dev to live)", "Improved documentation, Better onboarding/tutorial", "", "Backup & post management", "5", "", "no", "", "12", "2025-07-18 01:03:01", "unread"],
+                ["Developer / Site-builder", "Writing or editing posts/pages, Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations", "", "Curiosity / early adopter", "", "Yes (Once)", "Installation/setup issues, Missing a critical feature", "", "", "", "Improved documentation, Better onboarding/tutorial", "", "", "", "", "no", "", "11", "2025-07-18 00:30:58", "unread"],
+                ["Developer / Site-builder, Designer, Other", "Theme customization or CSS tweaks, Plugin installation or configuration, Media uploads & organization, Site performance & SEO, Backups & migrations", "", "WordPress management", "", "Yes (a few times)", "", "", "", "", "", "", "", "", "", "no", "", "10", "2025-07-18 00:25:21", "unread"]
+            ];
+
+            // Populate tables
+            populateTable('powerUsersTable', powerUsersData);
+            populateTable('trialUsersTable', trialUsersData);
+        }
+
+        function populateTable(tableId, data) {
+            const table = document.getElementById(tableId);
+            if (!table || !data.length) return;
+
+            table.innerHTML = '';
+            
+            data.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                row.forEach(cell => {
+                    const td = document.createElement(index === 0 ? 'th' : 'td');
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+                table.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
